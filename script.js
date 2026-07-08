@@ -2,6 +2,9 @@
   const {
     products,
     filterProducts,
+    getAvailableFoodCategories,
+    normalizeFoodCategory,
+    getHotProducts,
     addToCart,
     updateCartQuantity,
     removeFromCart,
@@ -11,6 +14,8 @@
   } = window.ShopCore;
 
   const productGrid = document.querySelector("[data-product-grid]");
+  const foodFiltersNode = document.querySelector("[data-food-filters]");
+  const hotListNode = document.querySelector("[data-hot-list]");
   const cartPanel = document.querySelector("[data-cart-panel]");
   const overlay = document.querySelector("[data-overlay]");
   const cartItemsNode = document.querySelector("[data-cart-items]");
@@ -21,7 +26,16 @@
   const successDialog = document.querySelector("[data-success-dialog]");
   const successMessage = document.querySelector("[data-success-message]");
 
-  let activeCategory = "all";
+  const foodCategoryLabels = {
+    all: "全部食品",
+    chicken: "鸡肉",
+    freeze: "冻干",
+    dental: "洁齿",
+    training: "训练奖励",
+  };
+
+  let activePetType = "all";
+  let activeFoodCategory = "all";
   let cart = [];
 
   function formatPrice(value) {
@@ -29,7 +43,7 @@
   }
 
   function renderProducts() {
-    const visibleProducts = filterProducts(products, activeCategory);
+    const visibleProducts = filterProducts(products, activePetType, activeFoodCategory);
 
     productGrid.innerHTML = visibleProducts
       .map(
@@ -49,6 +63,39 @@
               </div>
             </div>
           </article>
+        `,
+      )
+      .join("");
+  }
+
+  function renderFoodFilters() {
+    const availableCategories = getAvailableFoodCategories(products, activePetType);
+    activeFoodCategory = normalizeFoodCategory(
+      products,
+      activePetType,
+      activeFoodCategory,
+    );
+
+    foodFiltersNode.innerHTML = availableCategories
+      .map(
+        (category) => `
+          <button class="filter-button ${category === activeFoodCategory ? "is-active" : ""}" type="button" data-food-filter="${category}">
+            ${foodCategoryLabels[category]}
+          </button>
+        `,
+      )
+      .join("");
+  }
+
+  function renderHotList() {
+    hotListNode.innerHTML = getHotProducts(products)
+      .map(
+        (product, index) => `
+          <div class="hot-item">
+            <span class="hot-rank">${index + 1}</span>
+            <strong>${product.name}</strong>
+            <span>${formatPrice(product.price)}</span>
+          </div>
         `,
       )
       .join("");
@@ -142,14 +189,25 @@
     openCart();
   }
 
-  document.querySelectorAll(".filter-button").forEach((button) => {
+  document.querySelectorAll("[data-pet-filter]").forEach((button) => {
     button.addEventListener("click", () => {
-      activeCategory = button.dataset.category;
+      activePetType = button.dataset.petFilter;
+      activeFoodCategory = "all";
       document
-        .querySelectorAll(".filter-button")
+        .querySelectorAll("[data-pet-filter]")
         .forEach((entry) => entry.classList.toggle("is-active", entry === button));
+      renderFoodFilters();
       renderProducts();
     });
+  });
+
+  foodFiltersNode.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-food-filter]");
+    if (!button) return;
+
+    activeFoodCategory = button.dataset.foodFilter;
+    renderFoodFilters();
+    renderProducts();
   });
 
   document.querySelectorAll(".cart-toggle").forEach((button) => {
@@ -223,6 +281,8 @@
     if (event.key === "Escape") closeCart();
   });
 
+  renderFoodFilters();
+  renderHotList();
   renderProducts();
   renderCart();
 })();

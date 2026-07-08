@@ -47,7 +47,7 @@
         </div>
         <div>
           <strong>好筛好选</strong>
-          <span>按鸡肉、冻干、洁齿、训练奖励快速筛选。</span>
+          <span>先按猫猫狗狗，再按鸡肉、冻干、洁齿、训练奖励筛选。</span>
         </div>
         <div>
           <strong>轻量购买</strong>
@@ -59,15 +59,29 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">精选零食</p>
-            <h2 id="products-title">按今天的奖励场景挑选</h2>
+            <h2 id="products-title">按照今天的奖励场景挑选</h2>
           </div>
-          <div class="filters" role="list" aria-label="商品分类筛选">
-            <button class="filter-button is-active" type="button" data-category="all">全部</button>
-            <button class="filter-button" type="button" data-category="chicken">鸡肉</button>
-            <button class="filter-button" type="button" data-category="freeze">冻干</button>
-            <button class="filter-button" type="button" data-category="dental">洁齿</button>
-            <button class="filter-button" type="button" data-category="training">训练奖励</button>
+          <div class="filter-stack" aria-label="商品筛选">
+            <div class="filter-row">
+              <span>宠物</span>
+              <div class="filters" role="list" aria-label="宠物分类筛选">
+                <button class="filter-button is-active" type="button" data-pet-filter="all">全部宠物</button>
+                <button class="filter-button" type="button" data-pet-filter="cat">猫猫</button>
+                <button class="filter-button" type="button" data-pet-filter="dog">狗狗</button>
+              </div>
+            </div>
+            <div class="filter-row">
+              <span>食品</span>
+              <div class="filters" role="list" aria-label="食品分类筛选" data-food-filters></div>
+            </div>
           </div>
+        </div>
+        <div class="hot-list" aria-label="热销榜">
+          <div class="hot-list-heading">
+            <p class="eyebrow">热销榜</p>
+            <strong>全站前三</strong>
+          </div>
+          <div class="hot-items" data-hot-list></div>
         </div>
         <div class="product-grid" data-product-grid></div>
       </section>

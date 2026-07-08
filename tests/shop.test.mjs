@@ -2,13 +2,76 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import ShopCore from "../shop.js";
 
-test("filters products by category and keeps all products available", () => {
-  assert.equal(ShopCore.filterProducts(ShopCore.products, "all").length, 6);
+test("filters all pets and all food to keep every product visible by default", () => {
+  assert.equal(ShopCore.filterProducts(ShopCore.products, "all", "all").length, 6);
+});
 
-  const chickenItems = ShopCore.filterProducts(ShopCore.products, "chicken");
+test("filters cat products without showing dog-only products", () => {
+  const catItems = ShopCore.filterProducts(ShopCore.products, "cat", "all");
 
-  assert.equal(chickenItems.length, 2);
-  assert.ok(chickenItems.every((product) => product.category === "chicken"));
+  assert.equal(catItems.length, 5);
+  assert.ok(catItems.every((product) => product.petTypes.includes("cat")));
+  assert.equal(catItems.some((product) => product.id === "dental-chews"), false);
+});
+
+test("filters dog products and includes every dog-edible product", () => {
+  const dogItems = ShopCore.filterProducts(ShopCore.products, "dog", "all");
+
+  assert.equal(dogItems.length, 6);
+  assert.ok(dogItems.every((product) => product.petTypes.includes("dog")));
+});
+
+test("combines pet and food category filters", () => {
+  const catTrainingItems = ShopCore.filterProducts(ShopCore.products, "cat", "training");
+
+  assert.deepEqual(
+    catTrainingItems.map((product) => product.id),
+    ["training-bites"],
+  );
+});
+
+test("shows only available food categories for the selected pet type", () => {
+  assert.deepEqual(ShopCore.getAvailableFoodCategories(ShopCore.products, "cat"), [
+    "all",
+    "chicken",
+    "freeze",
+    "training",
+  ]);
+
+  assert.deepEqual(ShopCore.getAvailableFoodCategories(ShopCore.products, "dog"), [
+    "all",
+    "chicken",
+    "freeze",
+    "dental",
+    "training",
+  ]);
+});
+
+test("resets unavailable food category when pet type changes", () => {
+  assert.equal(
+    ShopCore.normalizeFoodCategory(ShopCore.products, "cat", "dental"),
+    "all",
+  );
+  assert.equal(
+    ShopCore.normalizeFoodCategory(ShopCore.products, "dog", "dental"),
+    "dental",
+  );
+});
+
+test("returns fixed site-wide hot products regardless of filters", () => {
+  const allHotProducts = ShopCore.getHotProducts(ShopCore.products);
+  const catHotProducts = ShopCore.getHotProducts(
+    ShopCore.filterProducts(ShopCore.products, "cat", "all"),
+  );
+
+  assert.deepEqual(
+    allHotProducts.map((product) => product.id),
+    ["salmon-freeze-dried", "chicken-strips", "training-bites"],
+  );
+  assert.deepEqual(
+    catHotProducts.map((product) => product.id),
+    ["salmon-freeze-dried", "chicken-strips", "training-bites"],
+  );
 });
 
 test("adds repeated products to cart by increasing quantity", () => {

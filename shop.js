@@ -19,6 +19,8 @@
       summary: "慢烘锁鲜，肉丝纤维清晰，适合日常奖励。",
       ingredients: "鸡胸肉、少量南瓜粉、迷迭香提取物",
       suitable: "成犬、成猫；幼宠请掰小后喂食",
+      petTypes: ["cat", "dog"],
+      hotScore: 96,
       imagePosition: "25% 35%",
     },
     {
@@ -32,6 +34,8 @@
       summary: "软糯小颗粒，训练时不掉渣，出门携带方便。",
       ingredients: "鸡肉、鸡肝、燕麦、胡萝卜粉",
       suitable: "犬猫通用；适合训练和互动奖励",
+      petTypes: ["cat", "dog"],
+      hotScore: 82,
       imagePosition: "72% 34%",
     },
     {
@@ -45,6 +49,8 @@
       summary: "真空冻干保留香气，可直接喂食或温水复水。",
       ingredients: "三文鱼、鳕鱼、蛋黄粉",
       suitable: "挑食猫咪、小型犬、需要增加饮水的宠物",
+      petTypes: ["cat", "dog"],
+      hotScore: 99,
       imagePosition: "27% 72%",
     },
     {
@@ -58,6 +64,8 @@
       summary: "鸭肉与梨粉搭配，香味温和，适合换季尝鲜。",
       ingredients: "鸭胸肉、梨粉、益生元",
       suitable: "犬猫通用；肠胃敏感宠物少量试喂",
+      petTypes: ["cat", "dog"],
+      hotScore: 88,
       imagePosition: "72% 72%",
     },
     {
@@ -71,6 +79,8 @@
       summary: "韧性咀嚼纹理帮助摩擦牙面，日常口气管理更轻松。",
       ingredients: "豌豆纤维、鸡肉粉、薄荷叶粉、欧芹粉",
       suitable: "中小型犬；不建议猫咪整支喂食",
+      petTypes: ["dog"],
+      hotScore: 74,
       imagePosition: "48% 30%",
     },
     {
@@ -84,13 +94,44 @@
       summary: "小颗粒低负担，适合召回、握手、等待等训练场景。",
       ingredients: "牛肉、蓝莓粉、红薯、奇亚籽",
       suitable: "成犬；猫咪可少量尝鲜",
+      petTypes: ["cat", "dog"],
+      hotScore: 91,
       imagePosition: "50% 78%",
     },
   ];
 
-  function filterProducts(sourceProducts, category) {
-    if (category === "all") return sourceProducts;
-    return sourceProducts.filter((product) => product.category === category);
+  function matchesPetType(product, petType) {
+    return petType === "all" || product.petTypes.includes(petType);
+  }
+
+  function matchesFoodCategory(product, foodCategory) {
+    return foodCategory === "all" || product.category === foodCategory;
+  }
+
+  function filterProducts(sourceProducts, petType, foodCategory) {
+    return sourceProducts.filter(
+      (product) =>
+        matchesPetType(product, petType) && matchesFoodCategory(product, foodCategory),
+    );
+  }
+
+  function getAvailableFoodCategories(sourceProducts, petType) {
+    const categories = sourceProducts
+      .filter((product) => matchesPetType(product, petType))
+      .map((product) => product.category);
+
+    return ["all", ...new Set(categories)];
+  }
+
+  function normalizeFoodCategory(sourceProducts, petType, foodCategory) {
+    const availableCategories = getAvailableFoodCategories(sourceProducts, petType);
+    return availableCategories.includes(foodCategory) ? foodCategory : "all";
+  }
+
+  function getHotProducts(_sourceProducts, limit = 3) {
+    return [...products]
+      .sort((firstProduct, secondProduct) => secondProduct.hotScore - firstProduct.hotScore)
+      .slice(0, limit);
   }
 
   function addToCart(cart, productId, quantity) {
@@ -165,6 +206,9 @@
   return {
     products,
     filterProducts,
+    getAvailableFoodCategories,
+    normalizeFoodCategory,
+    getHotProducts,
     addToCart,
     updateCartQuantity,
     removeFromCart,
