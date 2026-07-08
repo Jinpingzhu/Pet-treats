@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>摩萨宠物 | 宠物零食售卖</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="摩萨宠物首页">
+        <span class="brand-mark">MS</span>
+        <span>摩萨宠物</span>
+      </a>
+      <nav class="header-actions" aria-label="主要操作">
+        <a href="#products">精选商品</a>
+        <button class="icon-button cart-toggle" type="button" aria-label="打开购物车">
+          <span aria-hidden="true">🛒</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <img class="hero-image" src="assets/hero-pet-treats.png" alt="狗狗和猫咪旁边摆放着天然宠物零食">
+        <div class="hero-copy">
+          <p class="eyebrow">天然配方 · 小批慢制</p>
+          <h1 id="hero-title">给毛孩子的日常奖励，干净一点，也讲究一点。</h1>
+          <p class="hero-text">甄选肉源、低负担配方和真实食材口感，覆盖训练、拌粮、洁齿和日常互动场景。</p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#products">逛精选</a>
+            <button class="secondary-button cart-toggle" type="button">查看购物车</button>
+          </div>
+          <div class="hero-points" aria-label="核心卖点">
+            <span>无人工色素</span>
+            <span>人民币明码标价</span>
+            <span>前端模拟下单</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="intro-band" aria-label="品牌承诺">
+        <div>
+          <strong>真实质感</strong>
+          <span>使用本地生成图片资产，不做空白占位。</span>
+        </div>
+        <div>
+          <strong>好筛好选</strong>
+          <span>按鸡肉、冻干、洁齿、训练奖励快速筛选。</span>
+        </div>
+        <div>
+          <strong>轻量购买</strong>
+          <span>加入、增减、删除、结算都在前端完成。</span>
+        </div>
+      </section>
+
+      <section class="products-section" id="products" aria-labelledby="products-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">精选零食</p>
+            <h2 id="products-title">按今天的奖励场景挑选</h2>
+          </div>
+          <div class="filters" role="list" aria-label="商品分类筛选">
+            <button class="filter-button is-active" type="button" data-category="all">全部</button>
+            <button class="filter-button" type="button" data-category="chicken">鸡肉</button>
+            <button class="filter-button" type="button" data-category="freeze">冻干</button>
+            <button class="filter-button" type="button" data-category="dental">洁齿</button>
+            <button class="filter-button" type="button" data-category="training">训练奖励</button>
+          </div>
+        </div>
+        <div class="product-grid" data-product-grid></div>
+      </section>
+    </main>
+
+    <aside class="cart-panel" data-cart-panel aria-label="购物车" aria-hidden="true">
+      <div class="cart-header">
+        <div>
+          <p class="eyebrow">购物车</p>
+          <h2>本次选购</h2>
+        </div>
+        <button class="icon-button cart-close" type="button" aria-label="关闭购物车">×</button>
+      </div>
+      <div class="cart-items" data-cart-items></div>
+      <div class="cart-footer">
+        <div class="cart-total-row">
+          <span>合计</span>
+          <strong data-cart-total>¥0</strong>
+        </div>
+        <button class="primary-button full-width" type="button" data-checkout>模拟提交订单</button>
+      </div>
+    </aside>
+    <div class="overlay" data-overlay></div>
+
+    <dialog class="product-dialog" data-product-dialog>
+      <button class="icon-button dialog-close" type="button" aria-label="关闭商品详情">×</button>
+      <div data-product-dialog-content></div>
+    </dialog>
+
+    <dialog class="success-dialog" data-success-dialog>
+      <button class="icon-button dialog-close" type="button" aria-label="关闭下单提示">×</button>
+      <p class="eyebrow">提交成功</p>
+      <h2>已完成模拟下单</h2>
+      <p data-success-message>订单已模拟提交成功。</p>
+      <button class="primary-button full-width" type="button" data-success-ok>继续逛逛</button>
+    </dialog>
+
+    <script src="shop.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
